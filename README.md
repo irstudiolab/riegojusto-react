@@ -27,13 +27,13 @@ Esta es la interfaz web desarrollada en React para el proyecto **RiegoJusto** (C
    npm install
    
 3. Inicia el servidor de desarrollo:
- ```bash
+   ```bash
    npm run dev
 
 4. Abre el enlace http://localhost:5173 en tu navegador.
 
 ## 🔗 Repositorio de la API
 El backend de este proyecto está disponible en:
-https://github.com/anyicalcano23-tech/-api-proyecto-final-uasd
+*   https://github.com/anyicalcano23-tech/-api-proyecto-final-uasd
 
 Desarrollado por el Grupo #08 para la asignatura Lenguaje de Programación III (INF5160-05).
