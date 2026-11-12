@@ -1,16 +1,84 @@
-# React + Vite
+# 🌱 RiegoJusto - Interfaz en React
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+**Proyecto Integrador INF-516 — Grupo #08 — UASD 2026**
+**Hito: Migración del Frontend a React**
 
-Currently, two official plugins are available:
+Esta es la interfaz web desarrollada en React para el proyecto **RiegoJusto** (Caso AguaFrontera). La aplicación consume los datos de nuestra API RESTful (Node.js/Express) para gestionar el registro y la visualización de parcelas agrícolas.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠️ Tecnologías Utilizadas
+*   **React.js** (Componentes funcionales, `useState`, `useEffect`)
+*   **Vite** (Entorno de desarrollo y empaquetado)
+*   **JavaScript (ES6+)**
+*   **CSS3 / Estilos en línea**
+*   **Fetch API** para el consumo de datos del backend.
 
-## React Compiler
+## ⚙️ Características Implementadas
+*   Arquitectura basada en 4 componentes reutilizables (`App`, `Mensaje`, `TablaParcelas`, `FormularioParcela`).
+*   Manejo de estados de carga y error en la interfaz.
+*   Formulario funcional para registrar nuevas parcelas.
+*   Renderizado dinámico de listas de datos sin recargar la página.
+*   Conexión con la API local a través de `fetch()`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Cómo ejecutar en local
 
-## Expanding the Oxlint configuration
+1. Asegúrate de tener la **API de Node.js** corriendo en el puerto 3000.
+2. Instala las dependencias de este frontend:
+   ```bash
+   npm install
+3. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+4. Abre el enlace http://localhost:5173 en tu navegador.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## 🔗 Repositorio de la API
+El backend de este proyecto está disponible en:
+https://github.com/anyicalcano23-tech/-api-proyecto-final-uasd
+
+
+Desarrollado por el Grupo #08 para la asignatura Lenguaje de Programación III (INF5160-05).
+Aquí tienes el texto exacto. Solo tienes que copiarlo, ir a tu `README.md` en GitHub, borrar lo que trae por defecto y pegar esto:
+
+***
+
+```markdown
+# 🌱 RiegoJusto - Interfaz en React
+
+**Proyecto Integrador INF-516 — Grupo #08 — UASD 2026**
+**Hito: Migración del Frontend a React**
+
+Esta es la interfaz web desarrollada en React para el proyecto **RiegoJusto** (Caso AguaFrontera). La aplicación consume los datos de nuestra API RESTful (Node.js/Express) para gestionar el registro y la visualización de parcelas agrícolas.
+
+## 🛠️ Tecnologías Utilizadas
+*   **React.js** (Componentes funcionales, `useState`, `useEffect`)
+*   **Vite** (Entorno de desarrollo y empaquetado)
+*   **JavaScript (ES6+)**
+*   **CSS3 / Estilos en línea**
+*   **Fetch API** para el consumo de datos del backend.
+
+## ⚙️ Características Implementadas
+*   Arquitectura basada en 4 componentes reutilizables (`App`, `Mensaje`, `TablaParcelas`, `FormularioParcela`).
+*   Manejo de estados de carga y error en la interfaz.
+*   Formulario funcional para registrar nuevas parcelas.
+*   Renderizado dinámico de listas de datos sin recargar la página.
+*   Conexión con la API local a través de `fetch()`.
+
+## 🚀 Cómo ejecutar en local
+
+1. Asegúrate de tener la **API de Node.js** corriendo en el puerto 3000.
+2. Instala las dependencias de este frontend:
+   ```bash
+   npm install
+   ```
+3. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+4. Abre el enlace `http://localhost:5173` en tu navegador.
+
+## 🔗 Repositorio de la API
+El backend de este proyecto está disponible en: 
+`https://github.com/anyicalcano23-tech/-api-proyecto-final-uasd`
+
+---
+*Desarrollado por el Grupo #08 para la asignatura Lenguaje de Programación III (INF5160-05).*
+```
