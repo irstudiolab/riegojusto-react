@@ -25,12 +25,14 @@ Esta es la interfaz web desarrollada en React para el proyecto **RiegoJusto** (C
 2. Instala las dependencias de este frontend:
    ```bash
    npm install
+   
 3. Inicia el servidor de desarrollo:
  ```bash
-npm run dev
+   npm run dev
+
 4. Abre el enlace http://localhost:5173 en tu navegador.
 
-🔗 Repositorio de la API
+## 🔗 Repositorio de la API
 El backend de este proyecto está disponible en:
 https://github.com/anyicalcano23-tech/-api-proyecto-final-uasd
 
