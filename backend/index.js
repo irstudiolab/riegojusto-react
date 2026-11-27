@@ -17,6 +17,15 @@ let turnos = [
     { id: 1, parcelaId: 1, fecha: "2026-11-10", estado: "pendiente" }
 ];
 
+const ESTADOS_TURNO = ['pendiente', 'aprobado', 'completado', 'cancelado'];
+
+// Valida formato YYYY-MM-DD y que sea una fecha real (rechaza 2026-02-31)
+function fechaValida(texto) {
+    if (typeof texto !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(texto)) return false;
+    const d = new Date(`${texto}T00:00:00Z`);
+    return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === texto;
+}
+
 // ==========================================
 // RECURSO 1: PARCELAS (5 Endpoints)
 // ==========================================
@@ -39,24 +48,24 @@ app.get('/api/parcelas/:id', (req, res) => {
 
 // 3. POST: Crear una nueva parcela
 app.post('/api/parcelas', (req, res) => {
-    const { productor, extension, cultivo } = req.body;
+    const { productor, extension, cultivo } = req.body ?? {};
 
     // Validaciones básicas
-    if (!productor || typeof productor !== 'string') {
+    if (!productor || typeof productor !== 'string' || !productor.trim()) {
         return res.status(400).json({ error: "El campo 'productor' es obligatorio y debe ser texto." });
     }
     if (!extension || typeof extension !== 'number' || extension <= 0) {
         return res.status(400).json({ error: "El campo 'extension' es obligatorio y debe ser un número mayor a 0." });
     }
-    if (!cultivo || typeof cultivo !== 'string') {
+    if (!cultivo || typeof cultivo !== 'string' || !cultivo.trim()) {
         return res.status(400).json({ error: "El campo 'cultivo' es obligatorio y debe ser texto." });
     }
 
     const nuevaParcela = {
         id: parcelas.length > 0 ? parcelas[parcelas.length - 1].id + 1 : 1,
-        productor,
+        productor: productor.trim(),
         extension,
-        cultivo
+        cultivo: cultivo.trim()
     };
     
     parcelas.push(nuevaParcela);
@@ -72,11 +81,22 @@ app.patch('/api/parcelas/:id', (req, res) => {
         return res.status(404).json({ error: "Parcela no encontrada" });
     }
 
-    const { productor, extension, cultivo } = req.body;
-    
-    if (productor) parcela.productor = productor;
-    if (extension) parcela.extension = extension;
-    if (cultivo) parcela.cultivo = cultivo;
+    const { productor, extension, cultivo } = req.body ?? {};
+
+    // Validamos solo los campos que vienen en la petición
+    if (productor !== undefined && (typeof productor !== 'string' || !productor.trim())) {
+        return res.status(400).json({ error: "El campo 'productor' debe ser texto no vacío." });
+    }
+    if (extension !== undefined && (typeof extension !== 'number' || extension <= 0)) {
+        return res.status(400).json({ error: "El campo 'extension' debe ser un número mayor a 0." });
+    }
+    if (cultivo !== undefined && (typeof cultivo !== 'string' || !cultivo.trim())) {
+        return res.status(400).json({ error: "El campo 'cultivo' debe ser texto no vacío." });
+    }
+
+    if (productor !== undefined) parcela.productor = productor.trim();
+    if (extension !== undefined) parcela.extension = extension;
+    if (cultivo !== undefined) parcela.cultivo = cultivo.trim();
 
     res.status(200).json({ mensaje: "Parcela actualizada", datos: parcela });
 });
@@ -90,7 +110,10 @@ app.delete('/api/parcelas/:id', (req, res) => {
         return res.status(404).json({ error: "Parcela no encontrada" });
     }
 
+    const idParcela = parcelas[index].id;
     parcelas.splice(index, 1);
+    // Un turno no puede existir sin su parcela: se eliminan en cascada
+    turnos = turnos.filter(t => t.parcelaId !== idParcela);
     res.status(200).json({ mensaje: "Parcela eliminada correctamente" });
 });
 
@@ -117,20 +140,29 @@ app.get('/api/turnos/:id', (req, res) => {
 
 // 8. POST: Crear un nuevo turno
 app.post('/api/turnos', (req, res) => {
-    const { parcelaId, fecha, estado } = req.body;
+    const { parcelaId, fecha, estado } = req.body ?? {};
 
     // Validaciones básicas
     if (!parcelaId || typeof parcelaId !== 'number') {
         return res.status(400).json({ error: "El campo 'parcelaId' es obligatorio y debe ser un número." });
     }
-    if (!fecha || typeof fecha !== 'string') {
-        return res.status(400).json({ error: "El campo 'fecha' es obligatorio y debe ser texto (YYYY-MM-DD)." });
+    if (!fechaValida(fecha)) {
+        return res.status(400).json({ error: "El campo 'fecha' es obligatorio y debe tener el formato YYYY-MM-DD." });
+    }
+    if (estado !== undefined && !ESTADOS_TURNO.includes(estado)) {
+        return res.status(400).json({ error: `El campo 'estado' debe ser uno de: ${ESTADOS_TURNO.join(', ')}.` });
     }
 
     // Validar que la parcela existe
     const parcelaExiste = parcelas.find(p => p.id === parcelaId);
     if (!parcelaExiste) {
         return res.status(400).json({ error: "La parcela especificada no existe." });
+    }
+
+    // Una parcela no puede tener dos turnos activos el mismo día
+    const duplicado = turnos.find(t => t.parcelaId === parcelaId && t.fecha === fecha && t.estado !== 'cancelado');
+    if (duplicado) {
+        return res.status(409).json({ error: "Esa parcela ya tiene un turno asignado para esa fecha." });
     }
 
     const nuevoTurno = {
@@ -153,9 +185,9 @@ app.patch('/api/turnos/:id', (req, res) => {
         return res.status(404).json({ error: "Turno no encontrado" });
     }
 
-    const { estado } = req.body;
-    if (!estado || typeof estado !== 'string') {
-        return res.status(400).json({ error: "El campo 'estado' es obligatorio." });
+    const { estado } = req.body ?? {};
+    if (!ESTADOS_TURNO.includes(estado)) {
+        return res.status(400).json({ error: `El campo 'estado' es obligatorio y debe ser uno de: ${ESTADOS_TURNO.join(', ')}.` });
     }
 
     turno.estado = estado;
